@@ -1,0 +1,73 @@
+//+------------------------------------------------------------------+
+//|                                              bolingerBand EA.mq4 |
+//|                                  Copyright 2024, MetaQuotes Ltd. |
+//|                                             https://www.mql5.com |
+//+------------------------------------------------------------------+
+#property copyright "Copyright 2024, MetaQuotes Ltd."
+#property link      "https://www.mql5.com"
+#property version   "1.00"
+#property strict
+input double lots = 0.5;
+input int TakeProfit = 500;
+input int StopLoss = 200;
+input int BBPeriod = 20;
+input double BBDeviation= 2.0;
+double UpperBand,LowerBand;
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+  {
+//---
+
+//---
+   return(INIT_SUCCEEDED);
+  }
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+  {
+//---
+
+  }
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+  {
+//---
+   double cladd =  BolingerBang();
+
+  }
+//+------------------------------------------------------------------+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double BolingerBang()
+  {
+
+   UpperBand = iBands(NULL,0,BBPeriod,0,BBDeviation,PRICE_CLOSE,MODE_UPPER,0);
+   LowerBand = iBands(NULL,0,BBPeriod,0,BBDeviation,PRICE_CLOSE,MODE_LOWER,0);
+   double ClosePrice = Close[0];
+
+
+   if(OrdersTotal()==0)
+     {
+      if(ClosePrice > UpperBand)
+        {
+         int TicketSell= OrderSend(Symbol(),OP_SELL,lots,Bid,0,Bid+TakeProfit*Point(),Bid-StopLoss*Point(),"Sell order",12344,0,clrNONE);
+        }
+      else
+         if(ClosePrice<LowerBand)
+           {
+
+             int Tiketbuy = OrderSend(Symbol(),OP_BUY,lots,Ask,0,Ask-TakeProfit*Point(),Ask+StopLoss*Point(),"buy order",1234,0,clrAliceBlue);
+           }
+     }
+   return 0;
+  }
+
+//+------------------------------------------------------------------+
